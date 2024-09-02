@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <locale.h>
+#define MAX_SIZE 100 
+int i;
+typedef struct {
+  int items[MAX_SIZE];
+  int top;
+} Stack;
+
+// Inicializa a pilha
+void stack_init(Stack *stack) {
+  stack->top = -1;
+}
+
+// Verifica se a pilha está vazia
+int stack_is_empty(Stack *stack) {
+  return stack->top == -1;
+}
+
+// Verifica se a pilha está cheia
+int stack_is_full(Stack *stack) {
+  return stack->top == MAX_SIZE - 1;
+}
+
+// Empilha um item na pilha
+void stack_push(Stack *stack, int item) {
+  if (stack_is_full(stack)) {
+    printf("Pilha cheia!\n");
+    return;
+  }
+  stack->top++;
+  stack->items[stack->top] = item;
+}
+
+// Desempilha um item da pilha
+int stack_pop(Stack *stack) {
+  if (stack_is_empty(stack)) {
+    printf("Pilha vazia!\n");
+    return -1; 
+  }
+  int item = stack->items[stack->top];
+  stack->top--;
+  return item;
+}
+
+// Retorna o topo da pilha sem desempilhar
+int stack_peek(Stack *stack) {
+  if (stack_is_empty(stack)) {
+    printf("Pilha vazia!\n");
+    return -1; 
+  }
+  return stack->items[stack->top];
+}
+
+int main() {
+	setlocale(LC_ALL, "Porutuguese");
+	
+  Stack stack;
+  stack_init(&stack);
+
+  int n, item;
+
+  printf("Digite o número de elementos para empilhar: ");
+  scanf("%d", &n);
+
+  printf("Digite os elementos:\n");
+  for (i = 0; i < n; i++) {
+    scanf("%d", &item);
+    stack_push(&stack, item);
+  }
+
+  printf("Topo da pilha: %d\n", stack_peek(&stack));
+
+  printf("Desempilhando: %d\n", stack_pop(&stack));
+  printf("Desempilhando: %d\n", stack_pop(&stack));
+
+  printf("Topo da pilha: %d\n", stack_peek(&stack));
+
+  return 0;
+}
