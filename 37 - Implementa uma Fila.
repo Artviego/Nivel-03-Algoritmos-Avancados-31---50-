@@ -1,0 +1,118 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <locale.h>
+
+#define MAX 100  // Tamanho máximo da fila
+int i;
+
+typedef struct {
+    int items[MAX];
+    int front, rear, size;
+} Queue;
+
+// Função para inicializar a fila
+void initQueue(Queue *q) {
+    q->front = 0;
+    q->rear = -1;
+    q->size = 0;
+}
+
+// Função para verificar se a fila está vazia
+int isEmpty(Queue *q) {
+    return q->size == 0;
+}
+
+// Função para verificar se a fila está cheia
+int isFull(Queue *q) {
+    return q->size == MAX;
+}
+
+// Função para adicionar um elemento na fila
+void enqueue(Queue *q, int value) {
+    if (isFull(q)) {
+        printf("Fila cheia! Não é possível adicionar o elemento %d.\n", value);
+        return;
+    }
+    q->rear = (q->rear + 1) % MAX;
+    q->items[q->rear] = value;
+    q->size++;
+}
+
+// Função para remover um elemento da fila
+int dequeue(Queue *q) {
+    if (isEmpty(q)) {
+        printf("Fila vazia! Não há elementos para remover.\n");
+        return -1;  // Indicativo de erro
+    }
+    int item = q->items[q->front];
+    q->front = (q->front + 1) % MAX;
+    q->size--;
+    return item;
+}
+
+// Função para visualizar o elemento no início da fila
+int peek(Queue *q) {
+    if (isEmpty(q)) {
+        printf("Fila vazia! Não há elementos para visualizar.\n");
+        return -1;  // Indicativo de erro
+    }
+    return q->items[q->front];
+}
+
+// Função para exibir todos os elementos da fila
+void displayQueue(Queue *q) {
+    if (isEmpty(q)) {
+        printf("Fila vazia!\n");
+        return;
+    }
+    printf("Fila: ");
+    for (i = 0; i < q->size; i++) {
+        printf("%d ", q->items[(q->front + i) % MAX]);
+    }
+    printf("\n");
+}
+
+int main() {
+	setlocale(LC_ALL, "Portuguese");
+	
+    Queue q;
+    initQueue(&q);
+
+    int choice, value;
+
+    while (1) {
+        printf("1. Enqueue\n2. Dequeue\n3. Peek\n4. Display\n5. Exit\n");
+        printf("Escolha uma opção: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Digite o valor para adicionar: ");
+                scanf("%d", &value);
+                enqueue(&q, value);
+                break;
+            case 2:
+                value = dequeue(&q);
+                if (value != -1) {
+                    printf("Elemento removido: %d\n", value);
+                }
+                break;
+            case 3:
+                value = peek(&q);
+                if (value != -1) {
+                    printf("Elemento no início da fila: %d\n", value);
+                }
+                break;
+            case 4:
+                displayQueue(&q);
+                break;
+            case 5:
+                exit(0);
+                break;
+            default:
+                printf("Opção inválida!\n");
+        }
+    }
+
+    return 0;
+}
