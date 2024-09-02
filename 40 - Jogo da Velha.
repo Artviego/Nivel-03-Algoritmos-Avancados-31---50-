@@ -1,0 +1,136 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <locale.h>
+#define SIZE 3
+
+// Define os símbolos dos jogadores
+#define PLAYER_X 'X'
+#define PLAYER_O 'O'
+
+int i, j;
+// Função para imprimir o tabuleiro
+void print_board(char board[SIZE][SIZE]) {
+  printf("\n");
+  for (i = 0; i < SIZE; i++) {
+    for (j = 0; j < SIZE; j++) {
+      printf(" %c ", board[i][j]);
+      if (j < SIZE - 1) {
+        printf("|");
+      }
+    }
+    printf("\n");
+    if (i < SIZE - 1) {
+      printf("---+---+---\n");
+    }
+  }
+  printf("\n");
+}
+
+// Função para verificar se uma linha está completa
+int check_row(char board[SIZE][SIZE], char symbol) {
+  for (i = 0; i < SIZE; i++) {
+    if (board[i][0] == symbol && board[i][1] == symbol && board[i][2] == symbol) {
+      return 1;
+    }
+  }
+  return 0;
+}
+
+// Função para verificar se uma coluna está completa
+int check_column(char board[SIZE][SIZE], char symbol) {
+  for (i = 0; i < SIZE; i++) {
+    if (board[0][i] == symbol && board[1][i] == symbol && board[2][i] == symbol) {
+      return 1;
+    }
+  }
+  return 0;
+}
+
+// Função para verificar se uma diagonal está completa
+int check_diagonal(char board[SIZE][SIZE], char symbol) {
+  if (board[0][0] == symbol && board[1][1] == symbol && board[2][2] == symbol) {
+    return 1;
+  }
+  if (board[0][2] == symbol && board[1][1] == symbol && board[2][0] == symbol) {
+    return 1;
+  }
+  return 0;
+}
+
+// Função para verificar se o jogo acabou
+int game_over(char board[SIZE][SIZE]) {
+  // Verifica se algum jogador ganhou
+  if (check_row(board, PLAYER_X) || check_column(board, PLAYER_X) || check_diagonal(board, PLAYER_X)) {
+    return PLAYER_X;
+  }
+  if (check_row(board, PLAYER_O) || check_column(board, PLAYER_O) || check_diagonal(board, PLAYER_O)) {
+    return PLAYER_O;
+  }
+
+  // Verifica se o tabuleiro está cheio
+  int count = 0;
+  for (i = 0; i < SIZE; i++) {
+    for (j = 0; j < SIZE; j++) {
+      if (board[i][j] != ' ') {
+        count++;
+      }
+    }
+  }
+  if (count == SIZE * SIZE) {
+    return 'D'; // Empate
+  }
+
+  return 0; // Jogo não acabou
+}
+
+int main() {
+	setlocale(LC_ALL, "Portuguese");
+  char board[SIZE][SIZE];
+  int row, col, player = PLAYER_X;
+
+  // Inicializa o tabuleiro
+  for (i = 0; i < SIZE; i++) {
+    for (j = 0; j < SIZE; j++) {
+      board[i][j] = ' ';
+    }
+  }
+
+  // Loop do jogo
+  while (1) {
+    print_board(board);
+
+    // Solicita a jogada do jogador
+    printf("Jogador %c, escolha uma linha (1-3): ", player);
+    scanf("%d", &row);
+    printf("Jogador %c, escolha uma coluna (1-3): ", player);
+    scanf("%d", &col);
+
+    // Valida a jogada
+    if (row < 1 || row > SIZE || col < 1 || col > SIZE || board[row - 1][col - 1] != ' ') {
+      printf("Jogada inválida. Tente novamente.\n");
+      continue;
+    }
+
+    // Faz a jogada
+    board[row - 1][col - 1] = player;
+
+    // Verifica se o jogo acabou
+    int result = game_over(board);
+    if (result) {
+      print_board(board);
+      if (result == PLAYER_X) {
+        printf("O jogador %c venceu!\n", PLAYER_X);
+      } else if (result == PLAYER_O) {
+        printf("O jogador %c venceu!\n", PLAYER_O);
+      } else {
+        printf("Empate!\n");
+      }
+      break; 
+    }
+
+    // Muda o jogador
+    player = (player == PLAYER_X) ? PLAYER_O : PLAYER_X;
+  }
+
+  return 0;
+}
