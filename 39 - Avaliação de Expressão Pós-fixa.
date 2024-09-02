@@ -1,0 +1,120 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <locale.h>
+
+#define MAX 100
+
+int i = 0;
+// Estrutura para a pilha
+typedef struct {
+    int items[MAX];
+    int top;
+} Stack;
+
+// Função para inicializar a pilha
+void initStack(Stack *s) {
+    s->top = -1;
+}
+
+// Função para verificar se a pilha está vazia
+int isEmpty(Stack *s) {
+    return s->top == -1;
+}
+
+// Função para verificar se a pilha está cheia
+int isFull(Stack *s) {
+    return s->top == MAX - 1;
+}
+
+// Função para empurrar um elemento para a pilha
+void push(Stack *s, int value) {
+    if (isFull(s)) {
+        printf("Pilha cheia!\n");
+        return;
+    }
+    s->items[++(s->top)] = value;
+}
+
+// Função para retirar um elemento da pilha
+int pop(Stack *s) {
+    if (isEmpty(s)) {
+        printf("Pilha vazia!\n");
+        return -1;  // Indicativo de erro
+    }
+    return s->items[(s->top)--];
+}
+
+// Função para visualizar o elemento no topo da pilha
+int peek(Stack *s) {
+    if (isEmpty(s)) {
+        printf("Pilha vazia!\n");
+        return -1;  // Indicativo de erro
+    }
+    return s->items[s->top];
+}
+
+// Função para avaliar uma expressão pós-fixa
+int evaluatePostfix(char *expression) {
+    Stack s;
+    initStack(&s);
+    
+    for (i = 0; expression[i] != '\0'; i++) {
+        if (isspace(expression[i])) {
+            continue;  // Ignora espaços
+        }
+        
+        if (isdigit(expression[i])) {
+            int num = 0;
+            // Converte o número de caractere para inteiro
+            while (isdigit(expression[i])) {
+                num = num * 10 + (expression[i] - '0');
+                i++;
+            }
+            i--;  // Corrige o índice do loop
+            push(&s, num);
+        } else {
+            // Se for um operador, pop dois operandos e aplica o operador
+            int val2 = pop(&s);
+            int val1 = pop(&s);
+            
+            switch (expression[i]) {
+                case '+':
+                    push(&s, val1 + val2);
+                    break;
+                case '-':
+                    push(&s, val1 - val2);
+                    break;
+                case '*':
+                    push(&s, val1 * val2);
+                    break;
+                case '/':
+                    push(&s, val1 / val2);
+                    break;
+                default:
+                    printf("Operador inválido: %c\n", expression[i]);
+                    return -1;
+            }
+        }
+    }
+    
+    // O resultado final deve ser o único elemento na pilha
+    return pop(&s);
+}
+
+int main() {
+	setlocale(LC_ALL, "Portuguese");
+    char expression[MAX];
+    
+    // Solicita a expressão pós-fixa do usuário
+    printf("Digite a expressão pós-fixa (separada por espaços): ");
+    fgets(expression, sizeof(expression), stdin);
+    
+    int result = evaluatePostfix(expression);
+    
+    if (result != -1) {
+        printf("Resultado da avaliação: %d\n", result);
+    }
+    
+    return 0;
+}
