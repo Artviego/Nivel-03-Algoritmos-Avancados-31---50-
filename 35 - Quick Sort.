@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <locale.h>
+
+
+int i, j;
+
+
+// Função para trocar dois elementos
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+// Função para particionar o array e retornar o índice do pivô
+int partition(int arr[], int low, int high) {
+    int pivot = arr[high];  // Escolhe o último elemento como pivô
+    int i = low - 1;  // Índice do menor elemento
+
+    for (j = low; j < high; j++) {
+        if (arr[j] < pivot) {
+            i++;
+            swap(&arr[i], &arr[j]);
+        }
+    }
+    swap(&arr[i + 1], &arr[high]);
+    return i + 1;
+}
+
+// Função para ordenar o array usando Quick Sort
+void quick_sort(int arr[], int low, int high) {
+    if (low < high) {
+        int pi = partition(arr, low, high);
+
+        quick_sort(arr, low, pi - 1);
+        quick_sort(arr, pi + 1, high);
+    }
+}
+
+int main() {
+	setlocale(LC_ALL, "Portuguese");
+    int n;
+
+    // Solicita ao usuário o número de elementos
+    printf("Insira o número de elementos: ");
+    scanf("%d", &n);
+
+    int arr[n];
+
+    // Solicita ao usuário os elementos do array
+    printf("Insira os valores separados por espaço:\n");
+    for (i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+
+    // Ordena o array usando Quick Sort
+    quick_sort(arr, 0, n - 1);
+
+    // Exibe o array ordenado
+    printf("Vetor ordenado:\n");
+    for (i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+
+    return 0;
+}
