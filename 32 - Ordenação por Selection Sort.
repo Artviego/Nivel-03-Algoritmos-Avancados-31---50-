@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <locale.h>
+
+// Função para realizar o Selection Sort
+void selection_sort(int arr[], int n) {
+    int i, j, menor_indice;
+
+    for (i = 0; i < n - 1; i++) {
+        menor_indice = i;
+
+        for (j = i + 1; j < n; j++) {
+            if (arr[j] < arr[menor_indice]) {
+                menor_indice = j;
+            }
+        }
+
+        // Troca o elemento atual com o menor elemento encontrado
+        if (menor_indice != i) {
+            int temp = arr[menor_indice];
+            arr[menor_indice] = arr[i];
+            arr[i] = temp;
+        }
+    }
+}
+
+int main() {
+    // Idioma Português
+    setlocale(LC_ALL, "portuguese");
+
+    int n; 
+    printf("Digite o tamanho do vetor: ");
+    scanf("%d", &n); 
+
+    // Declara o vetor com o tamanho definido pelo usuário
+    int arr[n]; 
+
+    int i = 0; 
+    printf("Digite os elementos do vetor:\n");
+    for (i = 0; i < n; i++) {
+        printf("Elemento %d: ", i);
+        scanf("%d", &arr[i]);
+    }
+
+    printf("Vetor original: ");
+    for (i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+
+    selection_sort(arr, n); 
+
+    printf("Vetor ordenado: ");
+    for (i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+
+    return 0;
+}
