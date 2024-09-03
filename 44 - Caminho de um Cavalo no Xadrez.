@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <locale.h>
+#define SIZE 8 // Tamanho do tabuleiro de xadrez
+
+int i, j;
+// Estrutura para representar uma posição no tabuleiro
+typedef struct {
+  int linha;
+  int coluna;
+} Posicao;
+
+// Função para verificar se uma posição está dentro do tabuleiro
+int is_valid_position(Posicao posicao) {
+  return posicao.linha >= 1 && posicao.linha <= SIZE &&
+         posicao.coluna >= 1 && posicao.coluna <= SIZE;
+}
+
+// Função para gerar os movimentos possíveis de um cavalo
+void generate_moves(Posicao posicao, Posicao movimentos[8]) {
+  int count = 0;
+
+  // Movimentos possíveis (2 linhas, 1 coluna)
+  Posicao movimentos_possiveis[] = {
+    {-2, 1}, {-1, 2}, {1, 2}, {2, 1},
+    {2, -1}, {1, -2}, {-1, -2}, {-2, -1}
+  };
+
+  // Verifica cada movimento possível
+  for (i = 0; i < 8; i++) {
+    Posicao novo_movimento = {
+      posicao.linha + movimentos_possiveis[i].linha,
+      posicao.coluna + movimentos_possiveis[i].coluna
+    };
+
+    // Se o movimento for válido, adiciona-o à lista de movimentos
+    if (is_valid_position(novo_movimento)) {
+      movimentos[count++] = novo_movimento;
+    }
+  }
+}
+
+int main() {
+	setlocale(LC_ALL, "Portuguese");
+  Posicao posicao_inicial;
+  Posicao movimentos[8];
+
+  // Solicita a posição inicial do cavalo
+  printf("Digite a linha inicial do cavalo (1-8): ");
+  scanf("%d", &posicao_inicial.linha);
+  printf("Digite a coluna inicial do cavalo (1-8): ");
+  scanf("%d", &posicao_inicial.coluna);
+
+  // Gera os movimentos possíveis
+  generate_moves(posicao_inicial, movimentos);
+
+  // Imprime os movimentos possíveis
+  printf("Movimentos possíveis do cavalo:\n");
+  for (i = 0; i < 8; i++) {
+    if (movimentos[i].linha != 0) {
+      printf("Linha: %d, Coluna: %d\n", movimentos[i].linha, movimentos[i].coluna);
+    }
+  }
+
+  return 0;
+}
