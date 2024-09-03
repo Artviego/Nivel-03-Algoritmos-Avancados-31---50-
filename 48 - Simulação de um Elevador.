@@ -1,0 +1,77 @@
+#include <stdio.h>
+#include <stdlib.h> // Para a função sleep()
+#include <unistd.h> // Para a função sleep() no Linux. No Windows, use <windows.h> e Sleep() em milissegundos.
+#include <locale.h>
+
+// Função para exibir o menu de andares
+void displayFloors(int numFloors) {
+	int andar;
+    printf("\n\tAndares disponíveis:\n");
+    for (andar = 1; andar <= numFloors; andar++) {
+        printf("\tAndar %d\n", andar);
+    }
+}
+
+// Função para simular a operação do elevador
+void elevatorOperation(int currentFloor, int destinationFloor) {
+    if (destinationFloor < 1 || destinationFloor > 5) {
+        printf("\nAndar inválido. Escolha um andar entre 1 e 5.\n");
+        return;
+    }
+
+    if (currentFloor == destinationFloor) {
+        printf("\nVocê já está no Andar %d.\n", destinationFloor);
+        return;
+    }
+
+    printf("\nElevador indo do Andar %d para o Andar %d...\n", currentFloor, destinationFloor);
+
+    if (destinationFloor > currentFloor) {
+        printf("\nElevador subindo...\n");
+    } else {
+        printf("\nElevador descendo...\n");
+    }
+    
+    sleep(2); // Pausa por 2 segundos para simular o movimento
+
+    printf("Aguarde, abrindo portas no Andar %d...\n", destinationFloor);
+    sleep(2); // Pausa por 2 segundos para simular a abertura das portas
+
+    printf("Portas abertas. Você está no Andar %d.\n", destinationFloor);
+    printf("Aguarde, fechando portas em 5 segundos...\n");
+    sleep(5); // Pausa por 5 segundos para simular o fechamento das portas
+
+    printf("Portas fechadas. Elevador pronto para a próxima operação.\n");
+}
+
+int main() {
+	setlocale(LC_ALL, "Portuguese");
+    int currentFloor = 1; // O elevador começa no andar 1
+    int choice, continueOperation;
+
+    // Mensagens de boas-vindas
+    printf("\n\n\t\t\t*** Simulador de Elevador ***\n");
+
+    do {
+        // Exibe o menu de andares
+        displayFloors(5);
+
+        // Solicita ao usuário para escolher o andar
+        printf("\nEscolha o andar (1-5): ");
+        scanf("%d", &choice);
+
+        // Simula a operação do elevador para o andar escolhido
+        elevatorOperation(currentFloor, choice);
+
+        // Atualiza o andar atual
+        currentFloor = choice;
+
+        // Pergunta ao usuário se deseja continuar
+        printf("\nDeseja ir para outro andar? (1 - Sim, 0 - Não): ");
+        scanf("%d", &continueOperation);
+
+    } while (continueOperation != 0);
+
+    printf("\nObrigado por usar o simulador de elevador!\n");
+    return 0;
+}
