@@ -1,0 +1,112 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <locale.h>
+#define SIZE 9
+
+int i, j;
+// Função para imprimir o tabuleiro
+void print_board(int board[SIZE][SIZE]) {
+    printf("Sudoku Board:\n");
+    for (i = 0; i < SIZE; i++) {
+        for (j = 0; j < SIZE; j++) {
+            if (board[i][j] == 0)
+                printf(". ");
+            else
+                printf("%d ", board[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+// Função para verificar se o número é válido na posição (row, col)
+bool is_valid(int board[SIZE][SIZE], int row, int col, int num) {
+    // Verificar a linha
+    for (i = 0; i < SIZE; i++) {
+        if (board[row][i] == num)
+            return false;
+    }
+
+    // Verificar a coluna
+    for (i = 0; i < SIZE; i++) {
+        if (board[i][col] == num)
+            return false;
+    }
+
+    // Verificar o quadrante 3x3
+    int start_row = row - row % 3;
+    int start_col = col - col % 3;
+    for (i = start_row; i < start_row + 3; i++) {
+        for (j = start_col; j < start_col + 3; j++) {
+            if (board[i][j] == num)
+                return false;
+        }
+    }
+
+    return true;
+}
+
+// Função para verificar se o tabuleiro está completo
+bool is_complete(int board[SIZE][SIZE]) {
+    for (i = 0; i < SIZE; i++) {
+        for (j = 0; j < SIZE; j++) {
+            if (board[i][j] == 0)
+                return false;
+        }
+    }
+    return true;
+}
+
+// Função para permitir a entrada do usuário
+void user_input(int board[SIZE][SIZE]) {
+    int row, col, num;
+    while (true) {
+        print_board(board);
+        printf("Digite a linha (1-9), a coluna (1-9) e o número (1-9) separados por espaço (ou 0 0 0 para terminar): ");
+        scanf("%d %d %d", &row, &col, &num);
+
+        if (row == 0 && col == 0 && num == 0) {
+            break;
+        }
+
+        if (row < 1 || row > SIZE || col < 1 || col > SIZE || num < 1 || num > SIZE) {
+            printf("Entrada inválida. Tente novamente.\n");
+            continue;
+        }
+
+        row -= 1;
+        col -= 1;
+
+        if (is_valid(board, row, col, num)) {
+            board[row][col] = num;
+        } else {
+            printf("Número inválido para essa posição.\n");
+        }
+    }
+}
+
+int main() {
+	setlocale(LC_ALL, "Portuguese");
+    // Tabuleiro de Sudoku inicial (0 representa células vazias)
+    int sudoku_board[SIZE][SIZE] = {
+        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0}
+    };
+
+    printf("Bem-vindo ao Sudoku interativo!\n");
+    user_input(sudoku_board);
+
+    if (is_complete(sudoku_board)) {
+        printf("Parabéns! Você resolveu o Sudoku!\n");
+    } else {
+        printf("O Sudoku ainda não está completo ou contém erros.\n");
+    }
+
+    return 0;
+}
